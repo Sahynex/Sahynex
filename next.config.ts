@@ -1,14 +1,24 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Remove experimental.runtime - no longer needed in Next.js 15
-  // output: process.env.CF_PAGES ? 'export' : undefined,
-  output: 'export',
+  // output: 'export',
   images: {
     unoptimized: true
-  }
-  // Add if using Turbopack
-  // experimental: process.env.TURBO ? { turbo: {} } : {},
+  },
+  trailingSlash: false,
+  async headers() {
+    return [
+      {
+        source: '/api/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
